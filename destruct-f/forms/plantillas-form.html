@@ -1,0 +1,105 @@
+<div>
+    <div style="margin: 10px 0" class="row">
+        <div class="col-md-1 col-xs-1" style="padding:0" ng-include="'forms/menu2.html'">
+        </div>
+        <div class="col-md-8 col-xs-7">
+            <input ng-model="contexto.nombre" placeholder="Plantilla sin nombre" style="width: 100%; font-size: 18pt; font-style: italic; ">
+
+        </div>
+        <div class="list-group-item col-md-3 col-xs-4">
+            Plantilla vigente  
+            <div class="material-switch pull-right">
+                <input id="someSwitchOptionSuccess" name="someSwitchOption001" type="checkbox" ng-model="contexto.vigente" />
+                <label for="someSwitchOptionSuccess" class="label-success"></label>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div id="contenidoPlantilla" class="container">
+
+
+            <!-- ******************* DRAG N DROP ----------------------------------->
+            <div class="creacion-plantillaDnd row">
+                <script type="text/ng-template" id="list.html">
+                    <div dnd-list="list" style="min-height: 200px">
+                    <div ng-repeat="item in list"
+                    dnd-draggable="item"
+                    dnd-effect-allowed="move"
+                    dnd-moved="list.splice($index, 1)"
+                    dnd-selected="componentes.seleccionado = item"
+                    ng-click="toggleModal()"
+                    ng-init="parametros=item.parametros"
+                    ng-include="'componentes/'+item.componente + '.html'">
+                    </div>
+                    </div>
+                </script> 
+
+                <div class="col-xs-2">
+
+                    <div class="toolbox box box-grey box-padding">
+                        <h3>Componentes</h3>
+                        <div>
+                            <div ng-repeat="item in componentes.biblioteca"
+                                dnd-draggable="item"
+                                dnd-effect-allowed="copy"
+                                dnd-copied="item.id = item.id + 1"
+
+                                >
+                                <span  class="btn btn-default btn-lg" >{{item.componente}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="trashcan box box-grey box-padding">
+                        <!-- If you use [] as referenced list, the dropped elements will be lost -->
+                        <h3>Eliminar elementos</h3>
+                        <div dnd-list="[]">
+                                <button type="button" class="btn box-grey  btn-lg">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 
+                                </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-xs-10">
+                    <div class="row">
+                        <div ng-repeat="(zone, list) in componentes.componentesPlantilla" class="col-md-12">
+                            <div class="dropzone box box-yellow">
+                                <h3>Area de diseño:</h3>
+                                <div ng-include="'list.html'"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <h4><small>Descripción:</small></h4>
+                    <p><textarea ng-model="contexto.descripcion" placeholder="descripción" style="width:60%; height:50px;"></textarea></p>
+                </div>
+            </div>
+
+            <button ng-click="guardar()" class="btn btn-success glyphicon glyphicon-ok"> <span>Guardar</span></button> 
+            <a href="#/plantillas" class="btn btn-primary glyphicon glyphicon-home"> <span>Volver al inicio</span></a>
+        </div>
+    </div>    
+
+<modal title="Parámetros" visible="showModal">
+    <div class="form-group">
+        <table>
+            <tr ng-repeat="(key, val) in componentes.seleccionado.parametros">
+                <td>
+                    <label>{{key}}</label>
+                </td>
+                <td>                    
+                    <input type="text" class="form-control" id="{{key}}" placeholder="{{key}}" ng-model="val">
+                </td>                
+            </tr>
+        </table>
+    </div>
+    <button ng-click="modificaParametros()" class="btn btn-default ">Aceptar</button>
+ 
+</modal>
+
+</div>
